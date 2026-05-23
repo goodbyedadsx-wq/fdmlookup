@@ -51,11 +51,11 @@ export default function CyberpunkDashboard() {
 
   const login = () => {
     setLoginError('')
-    const found = accounts.find(
-      (account) =>
-        account.username === username &&
-        account.password === password
-    )
+const found = accounts.find(
+  (account: {
+    username: string
+    password: string
+  }) =>
 
     if (!found) {
       setLoginError('ACCESS DENIED — INVALID LOGIN CREDENTIALS')
