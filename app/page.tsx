@@ -2,6 +2,27 @@
 
 import { useState } from 'react'
 
+type Account = {
+  username: string
+  password: string
+  role: string
+  expiresAt: number | null
+}
+
+type Result = {
+  discordId: string
+  ip: string
+  country: string
+  region: string
+  city: string
+  postal: string
+  coordinates: string
+  isp: string
+  asn: string
+  vpn: string
+  hosting: string
+}
+
 const DEFAULT_ACCOUNTS = [
   {
     username: 'jalen',
