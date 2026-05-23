@@ -147,7 +147,7 @@ const login = () => {
       .map((line) => line.trim())
       .filter(Boolean)
 
-    const parsed = lines.map((line) => {
+    const parsed = lines.map((line: string) => {
       const parts = line.split('|')
 
       return {
@@ -156,12 +156,12 @@ const login = () => {
       }
     })
 
-    const filtered = parsed.filter((item) =>
+    const filtered = parsed.filter((item: any) =>
       item.discordId?.includes(searchValue)
     )
 
     const resultsWithGeo = await Promise.all(
-      filtered.map(async (item) => {
+      filtered.map(async (item: any) => {
         try {
           const response = await fetch(
             `https://api.allorigins.win/raw?url=${encodeURIComponent(
@@ -347,7 +347,7 @@ const login = () => {
                   id: 'settings',
                   label: 'Settings',
                 },
-              ].map((item) => (
+              ].map((item: any) => (
                 <button
                   key={item.id}
                   onClick={() => setSelectedPage(item.id)}
@@ -411,7 +411,7 @@ const login = () => {
               ['10M+', 'Profiles'],
               ['99.8%', 'Uptime'],
               ['<80ms', 'Latency'],
-            ].map(([value, label]) => (
+            ].map(([value, label]: [string, string]) => (
               <div
                 key={label}
                 className="border border-white/10 rounded-3xl bg-white/[0.03] p-8"
@@ -485,7 +485,7 @@ const login = () => {
               </button>
 
               <div className="mt-8 space-y-3">
-                {accounts.map((account, index) => (
+                {accounts.map((account: Account, index: number) => (
                   <div
                     key={index}
                     className="border border-white/10 rounded-2xl p-4 bg-white/[0.03]"
@@ -604,7 +604,7 @@ const login = () => {
                   No results found.
                 </div>
               ) : (
-                results.map((result, index) => (
+                results.map((result: Result, index: number) => (
                   <div
                     key={index}
                     className="border border-white/10 rounded-2xl bg-white/[0.03] p-6"
