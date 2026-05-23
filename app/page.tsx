@@ -23,10 +23,11 @@ type Result = {
   hosting: string
 }
 
-const DEFAULT_ACCOUNTS = [
+
+const DEFAULT_ACCOUNTS: Account[] = [
   {
-    username: 'jalen',
-    password: 'keven0820',
+    username: 'owner',
+    password: 'owner123',
     role: 'owner',
     expiresAt: null,
   },
@@ -34,7 +35,7 @@ const DEFAULT_ACCOUNTS = [
 
 export default function CyberpunkDashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [currentUser, setCurrentUser] = useState(null)
+  const [currentUser, setCurrentUser] = useState<Account | null>(null)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -49,7 +50,7 @@ export default function CyberpunkDashboard() {
   })
   const [searchValue, setSearchValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [results, setResults] = useState([])
+  const [results, setResults] = useState<Result[]>([])
 
   const [newUserUsername, setNewUserUsername] = useState('')
   const [newUserPassword, setNewUserPassword] = useState('')
@@ -58,7 +59,7 @@ export default function CyberpunkDashboard() {
 
   const [selectedPage, setSelectedPage] = useState('search')
 
-  const [accounts, setAccounts] = useState(() => {
+  const [accounts, setAccounts] = useState<Account[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('dashboard_accounts')
 
@@ -70,32 +71,28 @@ export default function CyberpunkDashboard() {
     return DEFAULT_ACCOUNTS
   })
 
-const login = () => {
-  setLoginError('')
-
-  const found = accounts.find(
-    (account: Account) => {
-      return (
+  const login = () => {
+    setLoginError('')
+    const found = accounts.find(
+      (account: Account) =>
         account.username === username &&
         account.password === password
-      )
+    )
+
+    if (!found) {
+      setLoginError('ACCESS DENIED — INVALID LOGIN CREDENTIALS')
+      return
     }
-  )
 
-  if (!found) {
-    setLoginError('ACCESS DENIED — INVALID LOGIN CREDENTIALS')
-    return
+    if (found.expiresAt && Date.now() > found.expiresAt) {
+      setLoginError('ACCESS DENIED — ACCOUNT EXPIRED')
+      return
+    }
+
+    setLoginError('')
+    setCurrentUser(found)
+    setIsLoggedIn(true)
   }
-
-  if (found.expiresAt && Date.now() > found.expiresAt) {
-    setLoginError('ACCESS DENIED — ACCOUNT EXPIRED')
-    return
-  }
-
-  setLoginError('')
-  setCurrentUser(found)
-  setIsLoggedIn(true)
-}
 
   const createAccount = () => {
     if (currentUser?.role !== 'owner') {
@@ -165,10 +162,10 @@ const login = () => {
 
     const lines = savedDatabase
       .split('\n')
-      .map((line) => line.trim())
+      .map((line: string) => line.trim())
       .filter(Boolean)
 
-    const parsed = lines.map((line: string) => {
+    const parsed = lines.map((line) => {
       const parts = line.split('|')
 
       return {
@@ -333,7 +330,7 @@ const login = () => {
 
                 <div>
                   <h1 className="font-black tracking-widest text-lg">
-                    FDM
+                    AWS +
                   </h1>
 
                   <p className="text-xs uppercase tracking-[0.3em] text-white/40">
@@ -429,7 +426,7 @@ const login = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             {[
-              ['10M+', 'Profiles'],
+              ['2.4M+', 'Profiles'],
               ['99.8%', 'Uptime'],
               ['<80ms', 'Latency'],
             ].map(([value, label]: [string, string]) => (
@@ -550,7 +547,7 @@ const login = () => {
               </p>
 
               <div className="mt-3 border border-white/10 rounded-2xl p-4 bg-white/[0.03] text-white/80">
-                Discord Id | IP
+                discord_id | ip_address
               </div>
             </div>
 
@@ -588,8 +585,9 @@ const login = () => {
               <h2 className="text-4xl font-black mb-3">Lookup Search</h2>
 
               <p className="text-white/40">
-                Lookup Discord IDs
-                <span className="text-white"> </span>
+                Search and lookup Discord IDs from the saved database.
+                Owner accounts can manage the database entries using the Database section.
+                <span className="text-white"> discord_id | ip_address</span>
               </p>
             </div>
 
