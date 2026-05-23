@@ -49,28 +49,28 @@ export default function CyberpunkDashboard() {
     return DEFAULT_ACCOUNTS
   })
 
-  const login = () => {
-    setLoginError('')
-const found = accounts.find(
-  (account: {
-    username: string
-    password: string
-  }) =>
+const login = () => {
+  setLoginError('')
 
-    if (!found) {
-      setLoginError('ACCESS DENIED — INVALID LOGIN CREDENTIALS')
-      return
-    }
+  const found = accounts.find(
+    (account: Account) =>
+      account.username === username &&
+      account.password === password
+  )
 
-    if (found.expiresAt && Date.now() > found.expiresAt) {
-      setLoginError('ACCESS DENIED — ACCOUNT EXPIRED')
-      return
-    }
-
-    setLoginError('')
-    setCurrentUser(found)
-    setIsLoggedIn(true)
+  if (!found) {
+    setLoginError('ACCESS DENIED — INVALID LOGIN CREDENTIALS')
+    return
   }
+
+  if (found.expiresAt && Date.now() > found.expiresAt) {
+    setLoginError('ACCESS DENIED — ACCOUNT EXPIRED')
+    return
+  }
+
+  setCurrentUser(found)
+  setIsLoggedIn(true)
+}
 
   const createAccount = () => {
     if (currentUser?.role !== 'owner') {
