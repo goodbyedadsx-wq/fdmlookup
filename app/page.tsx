@@ -53,9 +53,12 @@ const login = () => {
   setLoginError('')
 
   const found = accounts.find(
-    (account: Account) =>
-      account.username === username &&
-      account.password === password
+    (account: Account) => {
+      return (
+        account.username === username &&
+        account.password === password
+      )
+    }
   )
 
   if (!found) {
@@ -68,6 +71,7 @@ const login = () => {
     return
   }
 
+  setLoginError('')
   setCurrentUser(found)
   setIsLoggedIn(true)
 }
